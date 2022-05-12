@@ -1,8 +1,10 @@
+import axios from "axios";
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -28,7 +30,14 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [
+    "tetondan",
+    "dustinmyers",
+    "justsml",
+    "luishrd",
+    "bigknell",
+    "Jwatk13"
+];
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +58,70 @@ const followersArray = [];
       </div>
     </div>
 */
+
+function retrieveGitData(gitInfo) {
+  //SETTING UP OUR ELEMENTS
+  const userCard = document.createElement("div");
+  const userImg = document.createElement("img");
+  const userInfo = document.createElement("div");
+  const usersName = document.createElement("h3");
+  const usersUserName = document.createElement("p");
+  const userLocation = document.createElement("p");
+  const userProfile = document.createElement("p");
+  const userProfileAttribute = document.createElement("a");
+  const userFollowers = document.createElement("p");
+  const userFollowing = document.createElement("p");
+  const userBio = document.createElement("p");
+
+  //SETTING UP CLASSES and CONTENT
+  userCard.classList.add("card");
+  userImg.src = gitInfo.avatar_url;
+  userImg.alt = "Github users profile picture";
+  userInfo.classList.add("card-info");
+  usersName.classList.add("name");
+  usersName.textContent = `${gitInfo.name}`;
+  usersUserName.classList.add("username");
+  usersUserName.textContent = `${gitInfo.login}`;
+  userLocation.textContent = `Location: ${gitInfo.location}`;
+  userProfile.textContent = "Profile: ";
+  userProfileAttribute.href = gitInfo.html_url;
+  userProfileAttribute.textContent = `${gitInfo.html_url}`;
+  userFollowers.textContent = `Followers: ${gitInfo.followers}`;
+  userFollowing.textContent = `Following: ${gitInfo.following}`;
+  userBio.textContent = `Bio: ${gitInfo.bio}`;
+
+  //SETTING UP ELEMENT HIERARCHY
+  userCard.appendChild(userImg);
+  userCard.appendChild(userInfo);
+  userInfo.appendChild(usersName);
+  userInfo.appendChild(usersUserName);
+  userInfo.appendChild(userLocation);
+  userInfo.appendChild(userProfile);
+  userProfile.appendChild(userProfileAttribute);
+  userInfo.appendChild(userFollowers);
+  userInfo.appendChild(userFollowing);
+  userInfo.appendChild(userBio);
+
+
+  return userCard;
+  
+}
+
+//SETTING FOR LOOP TO RETRIEVE THE CARDS
+for (let i = 0; i < followersArray.length; i++) {
+  getGitCards(followersArray[i]);
+}
+
+//RETRIEVING THE DATA
+function getGitCards(username) {
+  axios.get(`https://api.github.com/users/${username}`)
+  .then((res) => {
+    document.querySelector(".cards").appendChild(retrieveGitData(res.data));
+   })
+  .catch((err) => {
+    console.error(err);
+  })
+}
 
 /*
   List of LS Instructors Github username's:
